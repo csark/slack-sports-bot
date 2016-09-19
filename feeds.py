@@ -24,6 +24,7 @@ def cbssports(url, dict_articles):
             continue
         elif titleFlag and articleFlag:
             title = line.replace('  ','')
+            title = title.replace('\n','')
             dict_articles[title] = link
             articleFlag = False
             titleFlag = False
@@ -57,7 +58,30 @@ def espn(url, dict_articles):
 if __name__ == '__main__':
     dict_articles = {}
     dict_articles = cbssports('http://cbssports.com', dict_articles)
-    dict_articles = espn('http://espn.com', dict_articles)
+    #dict_articles = espn('http://espn.com', dict_articles)
 
-    for art in dict_articles:
-        print(art)
+    f = open('db.txt','r')
+    output = ''
+    #print(dict_articles)
+    for title in dict_articles:
+        is_new = True
+        title = title.replace('\n','')
+        print("Title is: " + title)
+        for line in f:
+            line = line.replace('\n','')
+            print("Line is: " + line)
+            if line == title:
+                is_new = False
+                output += line + '\n'
+                print("Status => old. Output is: " + output + '\n')
+                break
+        if is_new:
+            output += title + '\n'
+            print("Status => new. Output is: " + output + '\n')
+
+    f.close()
+    w = open('db.txt','w+')
+    print('\n')
+    print("Output: " + output)
+    w.write(output)
+    w.close()
