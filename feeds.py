@@ -79,10 +79,12 @@ if __name__ == '__main__':
         if is_new:
             output += title + '\n'
             url     = 'https://hooks.slack.com/services/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'
-            payload = { "channel": "#sports", "username": "cbssports", "text": title }
+            text = '<' + dict_articles[title] + '|' + title + '>'
+            payload = { 'channel': '#sports', 'icon_url': 'http://www.cbssports.com/favicon.ico', 'username': 'cbssports', 'text': text }
             headers = {'Content-Type': 'application/json'}
-            res = requests.post(url, data=payload, headers=headers)
-            # curl -X POST --data-urlencode 'payload={"channel": "#sports", "username": "cbssports", "text": ' + title + '}' https://hooks.slack.com/services/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
+            res = requests.post(url, json=payload)
+            print(res.text)
+            # curl -X POST --data-urlencode 'payload={"channel": "#sports", "username": "cbssports", "text": "This is a test"}' https://hooks.slack.com/services/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
             #print("Status => new. Output is: " + output + '\n')
 
     f.close()
