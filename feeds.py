@@ -5,6 +5,7 @@
 # Description: Send sports feeds to private slack channel
 
 import urllib.request as urllib
+import requests
 
 def getFeed(url):
     response = urllib.urlopen(url)
@@ -58,7 +59,7 @@ def espn(url, dict_articles):
 if __name__ == '__main__':
     dict_articles = {}
     dict_articles = cbssports('http://cbssports.com', dict_articles)
-    #dict_articles = espn('http://espn.com', dict_articles)
+    web_hook = 'https://hooks.slack.com/services/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'
 
     f = open('db.txt','r')
     output = ''
@@ -66,22 +67,27 @@ if __name__ == '__main__':
     for title in dict_articles:
         is_new = True
         title = title.replace('\n','')
-        print("Title is: " + title)
+        #print("Title is: " + title)
         for line in f:
             line = line.replace('\n','')
-            print("Line is: " + line)
+            #print("Line is: " + line)
             if line == title:
                 is_new = False
                 output += line + '\n'
-                print("Status => old. Output is: " + output + '\n')
+                #print("Status => old. Output is: " + output + '\n')
                 break
         if is_new:
             output += title + '\n'
-            print("Status => new. Output is: " + output + '\n')
+            url     = 'https://hooks.slack.com/services/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'
+            payload = { "channel": "#sports", "username": "cbssports", "text": title }
+            headers = {'Content-Type': 'application/json'}
+            res = requests.post(url, data=payload, headers=headers)
+            # curl -X POST --data-urlencode 'payload={"channel": "#sports", "username": "cbssports", "text": ' + title + '}' https://hooks.slack.com/services/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
+            #print("Status => new. Output is: " + output + '\n')
 
     f.close()
     w = open('db.txt','w+')
-    print('\n')
-    print("Output: " + output)
+    #print('\n')
+    #print("Output: " + output)
     w.write(output)
     w.close()
