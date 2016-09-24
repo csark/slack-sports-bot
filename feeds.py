@@ -38,24 +38,6 @@ def cbssports(url, dict_articles):
 
     return dict_articles
 
-def espn(url, dict_articles):
-    # articleFlag = False
-    # titleFlag = False
-    # html = getFeed(url)
-    # link = ''
-    # title = ''
-    # print(html)
-    # for line in html:
-    #     if '<li data-story-id=' in line:
-    #         articleFlag = True
-    #         continue
-    #     elif articleFlag:
-    #         print(line)
-    #         print('\n')
-    #         articleFlag = False
-
-    return dict_articles
-
 if __name__ == '__main__':
     dict_articles = {}
     dict_articles = cbssports('http://cbssports.com', dict_articles)
@@ -63,31 +45,33 @@ if __name__ == '__main__':
 
     f = open('db.txt','r')
     output = ''
+    lines = []
+    for line in f:
+        lines.append(line)
+    f.close();
     #print(dict_articles)
     for title in dict_articles:
         is_new = True
         title = title.replace('\n','')
         #print("Title is: " + title)
-        for line in f:
+        for line in lines:
             line = line.replace('\n','')
             #print("Line is: " + line)
             if line == title:
                 is_new = False
                 output += line + '\n'
-                #print("Status => old. Output is: " + output + '\n')
+                print("Status => old. Item is: " + line + '\n')
                 break
         if is_new:
             output += title + '\n'
             url     = 'https://hooks.slack.com/services/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'
-            text = '<' + dict_articles[title] + '|' + title + '>'
+            text =  'New Post - <' + dict_articles[title] + '|' + title + '>'
             payload = { 'channel': '#sports', 'icon_url': 'http://www.cbssports.com/favicon.ico', 'username': 'cbssports', 'text': text }
             headers = {'Content-Type': 'application/json'}
             res = requests.post(url, json=payload)
-            print(res.text)
-            # curl -X POST --data-urlencode 'payload={"channel": "#sports", "username": "cbssports", "text": "This is a test"}' https://hooks.slack.com/services/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
-            #print("Status => new. Output is: " + output + '\n')
+            #print(res.text)
+            #print("Status => new. Item is: " + title + '\n')
 
-    f.close()
     w = open('db.txt','w+')
     #print('\n')
     #print("Output: " + output)
