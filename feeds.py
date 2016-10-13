@@ -41,7 +41,7 @@ def cbssports(url, dict_articles):
 if __name__ == '__main__':
     dict_articles = {}
     dict_articles = cbssports('http://cbssports.com', dict_articles)
-    web_hook = 'https://hooks.slack.com/services/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'
+    web_hook = ''
 
     f = open('db.txt','r')
     output = ''
@@ -64,7 +64,7 @@ if __name__ == '__main__':
                 break
         if is_new:
             output += title + '\n'
-            url     = 'https://hooks.slack.com/services/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'
+            url     = ''
             text =  'New Post - <' + dict_articles[title] + '|' + title + '>'
             payload = { 'channel': '#sports', 'icon_url': 'http://www.cbssports.com/favicon.ico', 'username': 'cbssports', 'text': text }
             headers = {'Content-Type': 'application/json'}
